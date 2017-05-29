@@ -48,12 +48,16 @@ print('Задача 3.\n')
 
 def bubble_sort(num_list):
     l = len(num_list)
-    i = 0
+    i = 1
+    # проходим по циклу пока переменная i меньше длины списка
     while i < l:
-        for j in range(l - 1):
+        # выполняем сравнения 2 соседних чисел исключая последние i числа, которые уже отсортированы после i проходов
+        for j in range(l - i):
+            # сравниваем 2 числа: если j больше j+1, то меняем их местами
+            # в результате после 1 прохода самое большое число окажется в конце
             if num_list[j] > num_list[j + 1]:
                 num_list[j], num_list[j + 1] = num_list[j + 1], num_list[j]
         i += 1
     return num_list
 
-print(bubble_sort([2, 7, 5, 1, 6]))
+print(bubble_sort([8, 2, 7, 5, 1, 6]))
