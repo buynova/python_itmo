@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS diary_tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'open',
+    start_date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    end_date TEXT NOT NULL DEFAULT ''
+)

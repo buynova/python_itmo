@@ -1,9 +1,13 @@
+from diary import storage
+
+
 def show_tasks():
     print('Вы выбрали действие "Вывести список задач"\n')
 
 
 def add_task():
     print('Вы выбрали действие "Добавить задачу"\n')
+    storage.add_task()
 
 
 def edit_task():
