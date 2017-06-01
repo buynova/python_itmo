@@ -26,11 +26,21 @@ SQL_INSERT_URL = '''
 '''
 
 
+def dict_factory(cursor, row):
+    d = {}
+    # print('row:', row)
+    # print('col:', cursor.description)
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
+
 def connect(db_name=None):
     if db_name is None:
         db_name = ':memory:'
 
     conn = sqlite3.connect(db_name)
+    conn.row_factory = dict_factory  # подключили 'фабрику'
 
     return conn
 
