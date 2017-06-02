@@ -1,7 +1,6 @@
 import sqlite3
 import os.path as Path
 
-# здесь использую символ "*", потому что смысл запроса - "Показать всё", а "всё" == "*"
 SQL_SHOW_ALL = '''
 SELECT id, name, description, status, start_date, end_date
 FROM diary_tasks
@@ -18,9 +17,15 @@ INSERT INTO diary_tasks (name, description)
 VALUES (?, ?)
 '''
 
-SQL_EDIT_TASK = '''
+SQL_EDIT_TASK_NAME = '''
 UPDATE diary_tasks
-SET name = ?, description = ?
+SET name = ?
+WHERE id = ?
+'''
+
+SQL_EDIT_TASK_DESCRIPTION = '''
+UPDATE diary_tasks
+SET description = ?
 WHERE id = ?
 '''
 
@@ -82,10 +87,18 @@ def add_task(task_name, description):
         return
 
 
-def edit_task(task_id, task_name, task_desc):
+def edit_task_name(task_id, task_name):
     with connect('diary.sqlite') as conn:
         initialize(conn)
-        cursor = conn.execute(SQL_EDIT_TASK, (task_name, task_desc, task_id))
+        conn.execute(SQL_EDIT_TASK_NAME, (task_name, task_id))
+        return
+
+
+def edit_task_description(task_id, task_desc):
+    with connect('diary.sqlite') as conn:
+        initialize(conn)
+        conn.execute(SQL_EDIT_TASK_DESCRIPTION, (task_desc, task_id))
+        return
 
 
 def change_task_status(task_id, status):

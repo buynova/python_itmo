@@ -30,7 +30,23 @@ def add_task():
 
 
 def edit_task():
-    print('Вы выбрали действие "Отредактировать задачу"\n')
+    while True:
+        task_id = input('Введите id редактируемой задачи: ')
+        if not task_id:
+            print('Вы не ввели идентификатор задачи!')
+        task = storage.find_task_by_id(task_id)
+        if not task:
+            print('Задача с таким id не найдена!')
+
+        new_name = input('Введите новое название задачи: ')
+        new_desc = input('Введите новое описание задачи: ')
+        if new_name:
+            storage.edit_task_name(task_id, new_name)
+            break
+        if new_desc:
+            storage.edit_task_description(task_id, new_desc)
+            print('Задача отредактирована.')
+            break
 
 
 def close_task():
