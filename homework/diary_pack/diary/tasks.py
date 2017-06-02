@@ -1,5 +1,9 @@
 from diary import storage
 
+TASK_STATUS_OPEN = 'open'
+TASK_STATUS_REOPEN = 'reopen'
+TASK_STATUS_CLOSE = 'close'
+
 
 def show_tasks():
     tasks = storage.show_all_tasks()
@@ -52,11 +56,11 @@ def reopen_task():
         task = storage.find_task_by_id(task_id)
         if not task:
             print('Задача с таким id не найдена!')
-        elif task['status'] in ['open', 'reopen']:
+        elif task['status'] in [TASK_STATUS_OPEN, TASK_STATUS_REOPEN]:
             print('Задача уже открыта.')
             break
         else:
-            storage.change_task_status(task_id, 'reopen')
+            storage.change_task_status(task_id, TASK_STATUS_REOPEN)
             print('Задача переоткрыта.')
             break
 
