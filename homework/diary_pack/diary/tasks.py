@@ -52,11 +52,11 @@ def reopen_task():
         task = storage.find_task_by_id(task_id)
         if not task:
             print('Задача с таким id не найдена!')
-        elif task['status'] in ['открыта', 'переоткрыта']:
+        elif task['status'] in ['open', 'reopen']:
             print('Задача уже открыта.')
             break
         else:
-            storage.change_task_status(task_id, 'переоткрыта')
+            storage.change_task_status(task_id, 'reopen')
             print('Задача переоткрыта.')
             break
 

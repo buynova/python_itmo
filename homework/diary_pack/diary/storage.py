@@ -32,7 +32,7 @@ WHERE id = ?
 
 SQL_CLOSE_TASK = '''
 UPDATE diary_tasks
-SET status = 'завершена', end_date = CURRENT_TIMESTAMP
+SET status = 'close', end_date = CURRENT_TIMESTAMP
 WHERE id = ?
 '''
 
