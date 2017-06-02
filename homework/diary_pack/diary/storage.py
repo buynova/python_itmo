@@ -26,7 +26,7 @@ WHERE id = ?
 
 SQL_CHANGE_STATUS = '''
 UPDATE diary_tasks
-SET status = ?
+SET status = ?, start_date = CURRENT_TIMESTAMP, end_date = ''
 WHERE id = ?
 '''
 
