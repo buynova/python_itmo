@@ -32,7 +32,7 @@ WHERE id = ?
 
 SQL_CLOSE_TASK = '''
 UPDATE diary_tasks
-SET status = 'closed', end_date = CURRENT_TIMESTAMP
+SET status = 'завершена', end_date = CURRENT_TIMESTAMP
 WHERE id = ?
 '''
 
@@ -68,6 +68,13 @@ def show_all_tasks():
         return cursor.fetchall()
 
 
+def find_task_by_id(task_id):
+    with connect('diary.sqlite') as conn:
+        initialize(conn)
+        cursor = conn.execute(SQL_SELECT_TASK_BY_ID, (task_id,))
+        return cursor.fetchone()
+
+
 def add_task(task_name, description):
     with connect('diary.sqlite') as conn:
         initialize(conn)
@@ -84,10 +91,12 @@ def edit_task(task_id, task_name, task_desc):
 def change_task_status(task_id, status):
     with connect('diary.sqlite') as conn:
         initialize(conn)
-        cursor = conn.execute(SQL_CHANGE_STATUS, (status, task_id))
+        conn.execute(SQL_CHANGE_STATUS, (status, task_id))
+        return
 
 
 def close_task(task_id):
     with connect('diary.sqlite') as conn:
         initialize(conn)
-        cursor = conn.execute(SQL_CLOSE_TASK, (task_id,))
+        conn.execute(SQL_CLOSE_TASK, (task_id,))
+        return

@@ -12,7 +12,8 @@ DIARY_MESSAGE = """==============================
 4. Завершить задачу.
 5. Начать задачу сначала.
 6. Удалить задачу.
-7. Выход.
+m. Показать меню.
+q. Выход.
 ==============================
 """
 
@@ -35,7 +36,8 @@ def main():
         '4': tasks.close_task,
         '5': tasks.reopen_task,
         '6': tasks.delete_task,
-        '7': action_exit
+        'm': show_menu,
+        'q': action_exit
     }
 
     while True:
