@@ -14,6 +14,8 @@
 import sqlite3
 import os.path as Path
 
+from url_shortener.converter import convert, inverse
+
 SQL_SELECT_ALL = '''
     SELECT id, original_url, short_url, created
     FROM shortener
@@ -23,6 +25,11 @@ SQL_SELECT_URL_BY_ORIGINAL = SQL_SELECT_ALL + ' WHERE original_url = ?'
 SQL_INSERT_URL = '''
     INSERT INTO shortener (original_url)
     VALUES (?)
+'''
+SQL_UPDATE_SHORT_URL = '''
+    UPDATE shortener
+    SET short_url = ?
+    WHERE id = ?
 '''
 
 
@@ -62,12 +69,15 @@ def add_url(conn, url, domain=''):
     with conn:
         found = find_url_by_origin(conn, url)
         if found:
-            return found[2]
+            return found.get('short_url')
 
         cursor = conn.execute(SQL_INSERT_URL, (url,))
 
-        # here's magic
-        return
+        pk = cursor.lastrowid
+        short_url = '{}/{}'.format(domain.strip('/'), convert(pk))
+
+        conn.execute(SQL_UPDATE_SHORT_URL, (short_url, pk))
+        return short_url
 
 
 def find_all(conn):
@@ -83,8 +93,9 @@ def find_url_by_pk(conn, pk):
 
 
 def find_url_by_short(conn, short_url):
-    # here will be magic
-    pass
+    short_url = short_url.rsplit('/', 1).pop()
+    pk = inverse(short_url)
+    return find_url_by_pk(conn, pk)
 
 
 def find_url_by_origin(conn, original_url):
