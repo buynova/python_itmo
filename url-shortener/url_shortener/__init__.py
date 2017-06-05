@@ -1,4 +1,5 @@
 import sys
+from collections import OrderedDict, namedtuple
 
 from url_shortener import storage
 
@@ -8,7 +9,18 @@ from url_shortener import storage
 
 get_connection = lambda: storage.connect('shortener.sqlite')
 
+Action = namedtuple('Action', ['func', 'name'])  # именованный кортеж
+actions = OrderedDict()
 
+
+def action(cmd, name):
+    def decorator(func):
+        actions[cmd] = Action(func=func, name=name)
+        return func
+    return decorator
+
+
+@action('1', 'Добавить URL-адрес')
 def action_add():
     """Обработчик действия 'Добавить URL-адрес'."""
     ok = False
@@ -29,6 +41,7 @@ def action_add():
             print('Некорректный URL-адрес!')
 
 
+@action('2', 'Найти оригинальный URL-адрес')
 def action_find():
     """Обработчик действия 'Найти оригинальный адрес'."""
     short_url = input('\nВведите короткий URL-адрес: ')
@@ -44,6 +57,7 @@ def action_find():
             print('Оригинальный адрес не найден.')
 
 
+@action('3', 'Вывести все URL-адреса')
 def action_find_all():
     """Обработчик действия 'Показать все ссылки'."""
     with get_connection() as conn:
@@ -53,18 +67,15 @@ def action_find_all():
         print('{url[short_url]} - {url[original_url]} - {url[created]}'.format(url=url))
 
 
+@action('m', 'Показать меню')
 def action_show_menu():
     """Обработчик действия 'Показать меню'."""
-    print('''
-URL Shortener v1.0
-
-1. Добавить URL-адрес
-2. Найти оригинальный URL-адрес
-3. Вывести все URL-адреса
-m. Показать меню
-q. Выйти''')
+    print('\nURL Shortener v2.0\n')
+    for cmd, act in actions.items():
+        print('{}. {}'.format(cmd, act.name))
 
 
+@action('q', 'Выйти')
 def action_exit():
     """Обработчик действия 'Выйти'."""
     sys.exit(0)
@@ -76,19 +87,19 @@ def main():
 
     action_show_menu()
 
-    actions = {
-        '1': action_add,
-        '2': action_find,
-        '3': action_find_all,
-        'm': action_show_menu,
-        'q': action_exit
-    }
+    # actions = {
+    #     '1': action_add,
+    #     '2': action_find,
+    #     '3': action_find_all,
+    #     'm': action_show_menu,
+    #     'q': action_exit
+    # }
 
     while True:
         cmd = input('\nВведите команду: ')
         action = actions.get(cmd)
 
         if action:
-            action()
+            action.func()
         else:
             print('Неизвестная команда!')
