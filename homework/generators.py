@@ -5,15 +5,17 @@ from string import ascii_letters, digits
 # Фибоначчи
 
 def fibonacci_generator(n):
-    # сначала создаем список-последовательность Фибоначчи
-    l = list()
-    l.append(1)
-    l.append(1)
-    for i in range(2, n):
-        l.append(l[i-1] + l[i-2])
-
-    for item in l:
-        yield item
+    a = b = 1
+    i = 0
+    while i < n:
+        if i in [0, 1]:
+            c = a
+        else:
+            c = a + b
+            a = b
+            b = c
+        i += 1
+        yield c
 
 for i in fibonacci_generator(10):
     print(i)
@@ -22,11 +24,10 @@ for i in fibonacci_generator(10):
 # Случайные пароли
 
 def password_generator(n):
-    pw_list = []
-    for i in range(n):
-        pw_list.append(random.choice(ascii_letters + digits))
+    while True:
+        yield ''.join([random.choice(ascii_letters + digits) for i in range(n)])
 
-    yield ''.join(pw_list)
-
-for i in password_generator(16):
-    print(i)
+gen = password_generator(16)
+print(next(gen))
+print(next(gen))
+print(next(gen))
