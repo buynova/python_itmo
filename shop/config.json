@@ -1,0 +1,4 @@
+{
+  "DB_PROVIDER": "sqlite",
+  "DB_NAME": "shop.sqlite"
+}
