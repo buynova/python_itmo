@@ -67,6 +67,6 @@ config = ParamHandler.get_instance('./params.json')
 config.add_param('key1', 'val1')
 config.add_param('key2', 'val2')
 config.add_param('key3', 'val3')
-config.write()  # запись файла в XML формате
+config.write()  # запись файла в JSON формате
 config = ParamHandler.get_instance('./params.json')
 print(config.read())
