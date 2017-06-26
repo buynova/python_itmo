@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+import json
 from os import path
 
 
@@ -43,3 +44,29 @@ class ParamHandler(metaclass=ABCMeta):
             raise ParamHandlerException('Type {} not found!'.format(ext))
 
         return klass(source, *args, **kwargs)
+
+
+class ParamHandlerException(BaseException):
+    pass
+
+
+class JsonParamHandler(ParamHandler):
+    def read(self):
+        with open(self.source) as f:
+            params = json.load(f)
+            return params
+
+    def write(self):
+        with open(self.source, 'w') as f:
+            json.dump(self.params, f)
+
+
+ParamHandler.add_type('json', JsonParamHandler)
+
+config = ParamHandler.get_instance('./params.json')
+config.add_param('key1', 'val1')
+config.add_param('key2', 'val2')
+config.add_param('key3', 'val3')
+config.write()  # запись файла в XML формате
+config = ParamHandler.get_instance('./params.json')
+print(config.read())
