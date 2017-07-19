@@ -38,6 +38,7 @@ def process_answer_words(message):
         bot.send_message(message.chat.id, conf.help_msg, reply_markup=markup)
     else:
         bot.send_message(message.chat.id, "Неверно :( Попробуй снова", reply_markup=markup)
+        bot.register_next_step_handler(message, process_answer_words)
 
 
 @bot.message_handler(commands=['start', 'help'])
@@ -70,7 +71,7 @@ def process_answer_spanish(message):
     if not spanish:
         bot.send_message(message.chat.id, 'Слово {} не найдено в словаре. /spanish'.format(rus))
     else:
-        bot.send_message(message.chat.id, spanish[0])
+        bot.send_message(message.chat.id, '"{}" на испанском - {}'.format(rus, spanish[0]))
         if spanish[1]:
             with open(spanish[1], 'rb') as audio:
                 bot.send_audio(message.chat.id, audio)
